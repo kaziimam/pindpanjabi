@@ -388,7 +388,8 @@
         },
         cache: false,
         success: function(data) {
-        window.location.href =  global_config.base_url+'home/flashMessage?msg=Order Place Successfull&typ=success&ttl=WOW!';
+          alert('place Order');
+        //window.location.href =  global_config.base_url+'home/flashMessage?msg=Order Place Successfull&typ=success&ttl=WOW!';
         },
         error: function(xhr, status, error) {
         alert("Somthing Went Wromg!");

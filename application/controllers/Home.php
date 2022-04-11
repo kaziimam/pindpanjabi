@@ -354,12 +354,64 @@ class Home extends MY_Controller {
 		$data['place'] = $_POST['place'];
 		$data['payment_mode'] = $_POST['payment_mode'];
 
+		$this->payment($data);
+
 		if ($this->User_model->place_order($data)) {
 			$message =  json_encode(array("statusCode"=>200));
 		}else {
 			$message = json_encode(array("statusCode"=>201));
 		}
 		echo $message;
+	}
+
+	public function payment($data){
+		$result = $long = $res = $part = $longu = "";
+		$ch = curl_init();
+
+		// curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
+		curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/');
+		curl_setopt($ch, CURLOPT_HEADER, FALSE);               
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		// curl_setopt($ch, CURLOPT_HTTPHEADER,array("X-Api-Key:c359796cf1659f3bf2bfaeb7bd063fc1","X-Auth-Token:aca18c4206f2ae40473dfe60d1f04730"));
+		curl_setopt($ch, CURLOPT_HTTPHEADER,array("X-Api-Key:test_43ada7933a78c5ed28b1d63b9cb","X-Auth-Token:test_c4b800644693c07bf25eec9e9c0"));
+
+		$payload = Array(
+			'purpose' => '16',
+			'amount' => $data['total_price'],
+			'phone' => 9137022985,
+			'buyer_name' => 'Kazi Imam Hasan',
+			'redirect_url' => 'http://localhost/Pind_panjabi/index.php/Home/user_details', 
+			'webhook' => '', 
+			'send_email' => true,
+			'send_sms' => false,
+			'email' => 'kazi@thinksurfmedia.com',
+			'allow_repeated_payments' => false
+		);
+
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
+		$response = curl_exec($ch);
+		curl_close($ch); 
+		print $response;
+		
+		echo '<br>';
+		$decodedText = html_entity_decode($response);
+		$myArray = array(json_decode($response, true));
+		echo '<br>';
+		print_r($myArray);
+		echo '<br>';
+		$longu = $myArray[0]["payment_request"]["longurl"];
+		echo $longu;
+		header('Location:' .$longu);
+	}
+
+	public function instamojo(){
+		$this->load->view('thirdparty/test/index');
+	}
+
+	public function mojo_action(){
+		$this->load->view('thirdparty/test/mojo');
 	}
 	
 	public function logout_user(){
