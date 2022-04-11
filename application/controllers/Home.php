@@ -381,7 +381,7 @@ class Home extends MY_Controller {
 			'amount' => $data['total_price'],
 			'phone' => 9137022985,
 			'buyer_name' => 'Kazi Imam Hasan',
-			'redirect_url' => 'http://localhost/Pind_panjabi/index.php/Home/user_details', 
+			'redirect_url' => base_url('/Home/user_details'), 
 			'webhook' => '', 
 			'send_email' => true,
 			'send_sms' => false,
